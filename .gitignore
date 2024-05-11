@@ -1,32 +1,37 @@
-# Prerequisites
-*.d
+# Created by https://www.toptal.com/developers/gitignore/api/matlab
+# Edit at https://www.toptal.com/developers/gitignore?templates=matlab
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+### MATLAB ###
+# Windows default autosave extension
+*.asv
 
-# Precompiled Headers
-*.gch
-*.pch
+# OSX / *nix default autosave extension
+*.m~
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Compiled MEX binaries (all platforms)
+*.mex*
 
-# Fortran module files
-*.mod
-*.smod
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Generated helpsearch folders
+helpsearch*/
 
-# Executables
-*.exe
-*.out
-*.app
+# Simulink code generation folders
+slprj/
+sccprj/
+
+# Matlab code generation folders
+codegen/
+
+# Simulink autosave extension
+*.autosave
+
+# Simulink cache files
+*.slxc
+
+# Octave session info
+octave-workspace
+
+# End of https://www.toptal.com/developers/gitignore/api/matlab
