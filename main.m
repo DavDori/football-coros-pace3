@@ -65,11 +65,11 @@ clear i lap d data_points sz T varNames varTypes str
 
 % select the track to represent
 ID_TRACK = 1;
-TIME_WINDOW_s = 20;
-COLOR_START= [0.5,0.4,0.2];
+TIME_WINDOW_s = 10;
+COLOR_START= [0.2,0.8,0.2];
 COLOR_END = [1,0,0];
-WIDTH_START = 0.5;
-WIDTH_END = 3;
+WIDTH_START = 1;
+WIDTH_END = 4;
 ZOOM_OUT_perc = 20;
 
 Hz = 1 / mean(seconds(diff(track{ID_TRACK}.Time)));
@@ -92,9 +92,11 @@ for i = 1:size(track{ID_TRACK},1)
     
     plotrun(track{ID_TRACK}.LatitudeDegrees(i_low:i), track{ID_TRACK}.LongitudeDegrees(i_low:i),...
         COLOR_START,COLOR_END,WIDTH_START,WIDTH_END)
+    text(track{ID_TRACK}.LatitudeDegrees(i)+0.00001,track{ID_TRACK}.LongitudeDegrees(i)+0.00001,...
+        string(track{ID_TRACK}.Speed(i))+"km/h",'Color',[1,1,1]);
     geobasemap satellite
     geolimits([lat_min-delta_map_lat, lat_max+delta_map_lat],...
               [lon_min-delta_map_lon, lon_max+delta_map_lon])
-    pause(0.1);
+    pause(0.03)
     clf
 end
