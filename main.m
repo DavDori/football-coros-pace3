@@ -4,7 +4,7 @@ clear
 
 %% Load data
 
-filename = 'Data\fb_2024_05_10.tcx';
+filename = 'Data/fb_2024_05_10.tcx';
 T = readstruct(filename,'FileType','xml');
 
 %% Extract valuable data
@@ -57,9 +57,9 @@ clear i lap d data_points sz T varNames varTypes str
 % check for missing values or NaN and replace them by looking at their
 % closest neighbour
 
-for i = 1:size(track{ID_TRACK},1)
-
-end
+% for i = 1:size(track{ID_TRACK},1)
+% 
+% end
 
 %% Represent data
 
@@ -85,10 +85,10 @@ delta_map_lon = (lon_max - lon_min) * ZOOM_OUT_perc / 100.0;
 window_size = round(TIME_WINDOW_s * Hz); 
 figure('Position',[0,500,1000,800])
 for i = 1:size(track{ID_TRACK},1)
+    i_low = max([i-window_size,1]);
     if(all(isnan(track{ID_TRACK}.LatitudeDegrees(i_low:i))) || all(isnan(track{ID_TRACK}.LongitudeDegrees(i_low:i))))
         continue;
     end
-    i_low = max([i-window_size,1]);
     
     plotrun(track{ID_TRACK}.LatitudeDegrees(i_low:i), track{ID_TRACK}.LongitudeDegrees(i_low:i),...
         COLOR_START,COLOR_END,WIDTH_START,WIDTH_END)
