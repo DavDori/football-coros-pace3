@@ -4,7 +4,7 @@ clear
 
 %% Load data
 
-filename = {'Data/fb_2024_05_10.tcx','Data/fb1_2024_05_10.tcx'};
+filename = {'Data/fb1_2024_05_10.tcx'};
 % Extract valuable data
 players = cellfun(@(n) extractFootballData(n), filename, 'UniformOutput', false);
 
@@ -33,10 +33,57 @@ lon_max = max(cellfun(@(p) max(p{ID_TRACK}.LongitudeDegrees), players, 'UniformO
 delta_map_lat = (lat_max - lat_min) * ZOOM_OUT_perc / 100.0;
 delta_map_lon = (lon_max - lon_min) * ZOOM_OUT_perc / 100.0;
 
+
+
+
+
+%% Heatmap
+
+param_HM.th = 0.01;
+param_HM.m = 20; % Number of rows (latitude)
+param_HM.n = 20; % Number of columns (longitude)
+param_HM.color_start = [1,0,0];
+param_HM.color_end = [0.3,0.6,1];
+
+% Create the edges of the bins
+lat_edges = linspace(lat_min, lat_max, param_HM.n+1);
+lon_edges = linspace(lon_min, lon_max, param_HM.m+1);
+
+data = players{1}{ID_TRACK};
+time_grid = zeros(param_HM.n, param_HM.m);
+% Loop through each point and accumulate time spent in each cell
+timediff = [1;seconds(diff(data.Time))];
+lat_centers = (lat_edges(1:end-1) + lat_edges(2:end)) / 2;
+lon_centers = (lon_edges(1:end-1) + lon_edges(2:end)) / 2;
+
+for i = 1:length(data.LatitudeDegrees)
+    % Find the indices of the cell for the current latitude and longitude
+    lat_idx = find(data.LatitudeDegrees(i) < lat_edges, 1) - 1;
+    lon_idx = find(data.LongitudeDegrees(i) < lon_edges, 1) - 1;
+    
+    % Make sure the indices are within the grid bounds
+    lat_idx = max(1, min(lat_idx, param_HM.n));
+    lon_idx = max(1, min(lon_idx, param_HM.m));
+    
+    % Accumulate the time in the corresponding cell
+    time_grid(lat_idx, lon_idx) = time_grid(lat_idx, lon_idx) + timediff(i);
+end
+
+% Create latitude and longitude coordinates for the centers of the cells
+[lon_mesh, lat_mesh] = meshgrid(lon_centers, lat_centers);
+
+
+%% Represent heatmap
+
+figure()
+plotrunHeatmap(lat_mesh, lon_mesh, time_grid, param_HM)
+
+
+%% Video
+
 window_size = cellfun(@(f) round(TAIL_TIME_WINDOW_s * f), Hz); 
 figure('Position',[0,500,1000,800])
 ax = geoaxes;
-
 for i = 1:size(track{ID_TRACK},1)
     for j = 1:length(track)
         i_low = max([i-window_size{j},1]);
